@@ -10,7 +10,7 @@ for i in `cat /tmp/cont.txt` ; do docker rm $i; done
 
 ## Also clear the images that are not tagged.  Listing has <none>
 
-docker images | grep "<none>" | cut -f 3 -d ' ' > /tmp/img.txt
+docker images | grep "<none>" | cut -c 58-70 > /tmp/img.txt
 
-# for i in `cat /tmp/img.txt`; do docker rmi $i; done
+for i in `cat /tmp/img.txt`; do docker rmi $i; done
 
