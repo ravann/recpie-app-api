@@ -1,0 +1,10 @@
+
+# Django test and flake
+docker-compose run --rm app sh -c "python manage.py test && flake8"
+
+# Create a new app
+docker-compose run --rm app sh -c "python manage.py startapp user"
+
+# Create super user
+docker-compose run app sh -c "python manage.py createsuperuser"
+
