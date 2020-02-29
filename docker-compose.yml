@@ -18,6 +18,7 @@ services:
       - DB_NAME=app
       - DB_USER=postgres
       - DB_PASS=P0stgr3sP@ssw0rd
+      - PYTHONPATH=$PYTHONPATH:/app
     depends_on:
       - db
 
