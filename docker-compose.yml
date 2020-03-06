@@ -27,3 +27,11 @@ services:
       - POSTGRES_DB=app
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=P0stgr3sP@ssw0rd
+
+  pgadm:
+    image: dpage/pgadmin4:4.18
+    ports:
+    - "8080:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=ravan@ow.com
+      - PGADMIN_DEFAULT_PASSWORD=test1234

@@ -9,6 +9,8 @@ CREATE_USER_URL = reverse('user:create')
 
 TOKEN_URL = reverse('user:token')
 
+ME_URL = reverse('user:me')
+
 
 def create_user(params):
     return get_user_model().objects.create_user(**params)
@@ -108,3 +110,53 @@ class PublicUserAPITest(TestCase):
         res = self.client.post(TOKEN_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertNotIn('token', res.data)
+
+    def test_test_retrieve_user_unauthorized(self):
+        """Test that authentication is required for users"""
+        res = self.client.get(ME_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class PrivateUserAPITest(TestCase):
+    """Test API that require authentication"""
+
+    def setUp(self):
+        payload = {
+            "email": "test@test.com",
+            "password": "testpass",
+            "name": "Test User"
+        }
+        self.user = create_user(payload)
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+    def test_retrive_profile_success(self):
+        """Test retrieving user profile for logged in user"""
+        res = self.client.get(ME_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, {
+            'name': self.user.name,
+            'email': self.user.email
+        })
+
+    def test_post_me_not_allowed(self):
+        """Test that post is not allowed on the url"""
+        res = self.client.post(ME_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_update_user_profile(self):
+        """Test updating user for authenticated user"""
+        pl = {
+            "password": "testpass123",
+            "name": "New User"
+        }
+        res = self.client.patch(ME_URL, pl)
+
+        self.user.refresh_from_db()
+        print(f"Updated user name is : {self.user.name}")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.user.name, pl['name'])
+        self.assertTrue(self.user.check_password(pl['password']))
