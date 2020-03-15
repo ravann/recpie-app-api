@@ -8,3 +8,6 @@ docker-compose run --rm app sh -c "python manage.py startapp user"
 # Create super user
 docker-compose run --rm app sh -c "python manage.py createsuperuser"
 
+# Create migrations
+docker-compose run --rm app sh -c "python manage.py makemigrations"
+

@@ -4,6 +4,7 @@ from django.utils.translation import gettext as _
 # Register your models here.
 
 from core import models
+from recipe import models as rmodels
 
 
 class UserAdmin(BaseUserAdmin):
@@ -35,3 +36,4 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(models.CustUser, UserAdmin)
+admin.site.register(rmodels.Tag)
